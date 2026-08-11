@@ -1,32 +1,38 @@
+using ExpenseTrackerApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using ExpenseTrackerApi.Services;
+using System.Security.Cryptography.X509Certificates;
 
 namespace ExpenseTrackerApi.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-public class WeatherForecastController : ControllerBase
+[Route("api/[controller]")]
+public class ExpenseController : ControllerBase
 {
-    private static readonly string[] Summaries = new[]
-    {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
 
-    private readonly ILogger<WeatherForecastController> _logger;
+    
+    [HttpGet]
 
-    public WeatherForecastController(ILogger<WeatherForecastController> logger)
+    public List<Expense> GetShowList()
     {
-        _logger = logger;
+        ExpenseService teste = new ExpenseService();
+        List<Expense> Lista = teste.CreateList();
+        return Lista;
     }
 
-    [HttpGet(Name = "GetWeatherForecast")]
-    public IEnumerable<WeatherForecast> Get()
+    [HttpGet("{id}")]
+
+    public IActionResult GetExpense(int id)
     {
-        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        ExpenseService teste = new ExpenseService();
+        List<Expense> Lista = teste.CreateList();
+        foreach(Expense expense in Lista)
         {
-            Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-        })
-        .ToArray();
+            if(expense.Id == id)
+            {
+                return Ok(expense);
+            }
+        }
+        return NotFound();
     }
 }
