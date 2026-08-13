@@ -9,13 +9,19 @@ namespace ExpenseTrackerApi.Controllers;
 [Route("api/[controller]")]
 public class ExpenseController : ControllerBase
 {
-    ExpenseService teste = new ExpenseService();
+    private readonly ExpenseService teste;
 
+    public ExpenseController(ExpenseService service)
+    {
+        teste = service;
+    }
+    
     [HttpGet]
 
     public List<Expense> GetShowList()
     {
         List<Expense> Lista = teste.AddFakeExpenses();
+        teste.WriteList(Lista);
         return Lista;
     }
 
