@@ -61,4 +61,22 @@ public class ExpenseController : ControllerBase
         }
         return NotFound();
     }
+    [HttpPut("{id}")]
+    public IActionResult ChangeExpense(int id,Expense ChangedExp)
+    {
+        List<Expense> Lista = teste.expenses;
+        foreach(Expense OriginalExp in Lista)
+        {
+            if(OriginalExp.Id == id)
+            {
+                OriginalExp.Id = ChangedExp.Id;
+                OriginalExp.Name = ChangedExp.Name;
+                OriginalExp.Value = ChangedExp.Value;
+                OriginalExp.Category = ChangedExp.Category;
+                OriginalExp.Date = ChangedExp.Date;
+                return Ok(ChangedExp);
+            }
+        }
+        return NotFound();
+    }
 }
