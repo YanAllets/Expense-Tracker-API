@@ -20,7 +20,7 @@ public class ExpenseController : ControllerBase
 
     public List<Expense> GetShowList()
     {
-        List<Expense> Lista = teste.AddFakeExpenses();
+        List<Expense> Lista = teste.expenses;
         teste.WriteList(Lista);
         return Lista;
     }
@@ -30,7 +30,7 @@ public class ExpenseController : ControllerBase
     public IActionResult GetExpense(int id)
     {
 
-        List<Expense> Lista = teste.AddFakeExpenses();
+        List<Expense> Lista = teste.expenses;
         foreach(Expense expense in Lista)
         {
             if(expense.Id == id)
@@ -46,5 +46,19 @@ public class ExpenseController : ControllerBase
     {
         teste.expenses.Add(expense);
         return Ok(teste.expenses);
+    }
+    [HttpDelete]
+
+    public IActionResult DeleteExpense(int id)
+    {
+        List<Expense> Lista = teste.expenses;
+        foreach(Expense expense in Lista)
+        {
+            if(expense.Id == id)
+            {
+                return Ok(Lista.Remove(expense));
+            }
+        }
+        return NotFound();
     }
 }
