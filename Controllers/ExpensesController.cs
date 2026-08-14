@@ -62,11 +62,11 @@ public class ExpenseController : ControllerBase
     {
         if (!teste.ChangeExpense(id, ChangedExp))
         {
-            return Ok(ChangedExp);
+            return NotFound();
         }
         else
         {
-            return NotFound();
+            return Ok(ChangedExp);
         }
     }
 }
