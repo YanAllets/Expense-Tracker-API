@@ -29,16 +29,7 @@ public class ExpenseController : ControllerBase
 
     public IActionResult GetExpense(int id)
     {
-
-        List<Expense> Lista = teste.expenses;
-        foreach(Expense expense in Lista)
-        {
-            if(expense.Id == id)
-            {
-                return Ok(expense);
-            }
-        }
-        return NotFound();
+        return Ok(teste.ListIsReal(id).expense);
     }
 
     [HttpPost]
