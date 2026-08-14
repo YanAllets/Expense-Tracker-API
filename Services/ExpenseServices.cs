@@ -1,4 +1,6 @@
 using ExpenseTrackerApi.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
+
 
 namespace ExpenseTrackerApi.Services;
 
@@ -43,4 +45,20 @@ public class ExpenseService
         }
         return (false,null);
     }
+    public bool ChangeExpense(int id,Expense ChangedExp)
+    {
+        foreach(Expense OriginalExp in expenses)
+        {
+            if(OriginalExp.Id == id)
+            {
+                OriginalExp.Id = ChangedExp.Id;
+                OriginalExp.Name = ChangedExp.Name;
+                OriginalExp.Value = ChangedExp.Value;
+                OriginalExp.Category = ChangedExp.Category;
+                OriginalExp.Date = ChangedExp.Date;
+                return true;
+            }
+        }
+        return false;
+    } 
 }

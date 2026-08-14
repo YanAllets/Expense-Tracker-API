@@ -1,7 +1,6 @@
 using ExpenseTrackerApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using ExpenseTrackerApi.Services;
-using System.Security.Cryptography.X509Certificates;
 
 namespace ExpenseTrackerApi.Controllers;
 
@@ -20,16 +19,22 @@ public class ExpenseController : ControllerBase
 
     public List<Expense> GetShowList()
     {
-        List<Expense> Lista = teste.expenses;
-        teste.WriteList(Lista);
-        return Lista;
+        return teste.expenses;
     }
 
     [HttpGet("{id}")]
 
     public IActionResult GetExpense(int id)
     {
-        return Ok(teste.ListIsReal(id).expense);
+        var result = teste.ListIsReal(id);
+        if(!result.Item1)
+        {
+            return NotFound();
+        }
+        else
+        {
+            return Ok(result.expense);
+        }
     }
 
     [HttpPost]
@@ -42,32 +47,26 @@ public class ExpenseController : ControllerBase
 
     public IActionResult DeleteExpense(int id)
     {
-        List<Expense> Lista = teste.expenses;
-        foreach(Expense expense in Lista)
+        var result = teste.ListIsReal(id);
+        if (!result.Item1)
         {
-            if(expense.Id == id)
-            {
-                return Ok(Lista.Remove(expense));
-            }
+            return NotFound();
         }
-        return NotFound();
+        else
+        {
+            return Ok(teste.expenses.Remove(result.expense));
+        }
     }
     [HttpPut("{id}")]
     public IActionResult ChangeExpense(int id,Expense ChangedExp)
     {
-        List<Expense> Lista = teste.expenses;
-        foreach(Expense OriginalExp in Lista)
+        if (!teste.ChangeExpense(id, ChangedExp))
         {
-            if(OriginalExp.Id == id)
-            {
-                OriginalExp.Id = ChangedExp.Id;
-                OriginalExp.Name = ChangedExp.Name;
-                OriginalExp.Value = ChangedExp.Value;
-                OriginalExp.Category = ChangedExp.Category;
-                OriginalExp.Date = ChangedExp.Date;
-                return Ok(ChangedExp);
-            }
+            return Ok(ChangedExp);
         }
-        return NotFound();
+        else
+        {
+            return NotFound();
+        }
     }
 }
