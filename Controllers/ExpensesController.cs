@@ -1,6 +1,7 @@
 using ExpenseTrackerApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using ExpenseTrackerApi.Services;
+using MySqlConnector;
 
 namespace ExpenseTrackerApi.Controllers;
 
@@ -40,8 +41,9 @@ public class ExpenseController : ControllerBase
     [HttpPost]
     public IActionResult CreateExpense(Expense expense)
     {
-        teste.expenses.Add(expense);
-        return Ok(teste.expenses);
+        string query = $"Insert into teste (Name,Value) Values ('{expense.Name}','{expense.Value}')";
+        DataBase.Service.SqlNonQuery(query);
+        return Ok();
     }
     [HttpDelete]
 

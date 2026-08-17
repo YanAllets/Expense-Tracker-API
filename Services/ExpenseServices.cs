@@ -1,5 +1,6 @@
 using ExpenseTrackerApi.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
+using MySqlConnector;
 
 
 namespace ExpenseTrackerApi.Services;
