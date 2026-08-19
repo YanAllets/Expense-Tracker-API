@@ -4,13 +4,15 @@ using MySqlConnector;
 namespace ExpenseTrackerApi.DataBase;
 public class Service
 {
-    public static MySqlCommand SqlNonQuery(string query)
+    public static void SqlNonQuery(string query,Expense expense)
     {
-        Config.conn.Open();
-        MySqlCommand command = new MySqlCommand(query,Config.conn);
-        command.ExecuteNonQuery();
-        Config.conn.Close();
-        return command;
+        MySqlCommand comando = new MySqlCommand(query,Config.conn);
 
+        comando.Parameters.AddWithValue("@date",expense.Date);
+        comando.Parameters.AddWithValue("@category",expense.Category);
+
+        Config.conn.Open();
+        comando.ExecuteNonQuery();
+        Config.conn.Close();
     }
 }

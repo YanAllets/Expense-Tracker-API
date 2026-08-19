@@ -42,9 +42,8 @@ public class ExpenseController : ControllerBase
     [HttpPost]
     public IActionResult CreateExpense(Expense expense)
     {
-        string query = $"Insert into expenses (Name,Value,Data) Values ('{expense.Name}','{expense.Value}','@date')";
-        MySqlCommand command = Service.SqlNonQuery(query);
-        command.Parameters.AddWithValue("@id", expense.Id);
+        string query = $"Insert into expenses (Name,Value,Data,Category) Values ('{expense.Name}','{expense.Value}',@date,@category)";
+        DataBase.Service.SqlNonQuery(query,expense);
         return Ok();
     }
     [HttpDelete]
