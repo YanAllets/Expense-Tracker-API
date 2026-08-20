@@ -19,10 +19,10 @@ public class ExpenseController : ControllerBase
     
     [HttpGet]
 
-    public void GetShowList()
+    public string GetShowList()
     {
         string query = "SELECT * FROM expensetracker.expenses;";
-        DataBase.Service.SqlRead(query);
+        return DataBase.Service.SqlRead(query);
     }
 
     [HttpGet("{id}")]
