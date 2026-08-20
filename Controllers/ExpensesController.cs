@@ -19,9 +19,10 @@ public class ExpenseController : ControllerBase
     
     [HttpGet]
 
-    public List<Expense> GetShowList()
+    public void GetShowList()
     {
-        return teste.expenses;
+        string query = "SELECT * FROM expensetracker.expenses;";
+        DataBase.Service.SqlRead(query);
     }
 
     [HttpGet("{id}")]
@@ -42,7 +43,7 @@ public class ExpenseController : ControllerBase
     [HttpPost]
     public IActionResult CreateExpense(Expense expense)
     {
-        string query = $"Insert into expenses (Name,Value,Data,Category) Values ('{expense.Name}','{expense.Value}',@date,@category)";
+        string query = $"Insert into expenses (Name,Value,Data,Category) Values (@name,@value,@date,@category)";
         DataBase.Service.SqlNonQuery(query,expense);
         return Ok();
     }
