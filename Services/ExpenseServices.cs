@@ -35,31 +35,31 @@ public class ExpenseService
             System.Console.WriteLine(expense);
         }
     }
-    public (bool,Expense? expense) ListIsReal(int id)
+    public static bool ExpenseIsReal(int id)
     {
-        foreach(Expense expense in expenses)
+        string query = $"select count(*) from expenses where id = {id}";
+        if (DataBase.Service.SqlScalar(query) == 1)
         {
-            if(expense.Id == id)
-            {
-                return (true,expense);
-            }
+            return true;
         }
-        return (false,null);
+        else
+        {
+            return false;
+        }
     }
-    public bool ChangeExpense(int id,Expense ChangedExp)
+    public static bool ChangeExpense(int id,Expense expense)
     {
-        foreach(Expense OriginalExp in expenses)
+        if (ExpenseIsReal(id) == true)
         {
-            if(OriginalExp.Id == id)
-            {
-                OriginalExp.Id = ChangedExp.Id;
-                OriginalExp.Name = ChangedExp.Name;
-                OriginalExp.Value = ChangedExp.Value;
-                OriginalExp.Category = ChangedExp.Category;
-                OriginalExp.Date = ChangedExp.Date;
-                return true;
-            }
+            expense.Id = id;
+            string query = $"UPDATE expenses SET Name = @name,Value = @value,Data = @data,Category = @category WHERE id = @id";
+            DataBase.Service.SqlNonQuery(query,expense);
+            return true;
         }
-        return false;
+        else
+        {
+            return false;
+        }
+        
     }
 }

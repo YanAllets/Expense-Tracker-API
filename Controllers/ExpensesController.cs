@@ -29,14 +29,14 @@ public class ExpenseController : ControllerBase
 
     public IActionResult GetExpense(int id)
     {
-        var result = teste.ListIsReal(id);
-        if(!result.Item1)
+        if(ExpenseService.ExpenseIsReal(id) == true)
         {
             return NotFound();
         }
         else
         {
-            return Ok(result.expense);
+            string query = $"SELECT * FROM expensetracker.expenses wherer id = {id};";
+            return Ok(DataBase.Service.SqlRead(query));
         }
     }
 
@@ -51,26 +51,19 @@ public class ExpenseController : ControllerBase
 
     public IActionResult DeleteExpense(int id)
     {
-        var result = teste.ListIsReal(id);
-        if (!result.Item1)
+        if (ExpenseService.ExpenseIsReal(id) == false)
         {
             return NotFound();
         }
         else
         {
-            return Ok(teste.expenses.Remove(result.expense));
+            return Ok();
         }
     }
     [HttpPut("{id}")]
     public IActionResult ChangeExpense(int id,Expense ChangedExp)
     {
-        if (!teste.ChangeExpense(id, ChangedExp))
-        {
-            return NotFound();
-        }
-        else
-        {
-            return Ok(ChangedExp);
-        }
+        ExpenseService.ChangeExpense(id,ChangedExp);
+        return GetExpense(id);
     }
 }
