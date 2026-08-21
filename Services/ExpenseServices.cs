@@ -52,8 +52,8 @@ public class ExpenseService
         if (ExpenseIsReal(id) == true)
         {
             expense.Id = id;
-            string query = $"UPDATE expenses SET Name = @name,Value = @value,Data = @data,Category = @category WHERE id = @id";
-            DataBase.Service.SqlNonQuery(query,expense);
+            string query = $"UPDATE expenses SET Name = @name,Value = @value,Data = @date,Category = @category WHERE id = @id";
+            DataBase.Service.SqlNonQueryExp(query,expense);
             return true;
         }
         else

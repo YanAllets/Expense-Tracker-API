@@ -29,13 +29,13 @@ public class ExpenseController : ControllerBase
 
     public IActionResult GetExpense(int id)
     {
-        if(ExpenseService.ExpenseIsReal(id) == true)
+        if(ExpenseService.ExpenseIsReal(id) == false)
         {
             return NotFound();
         }
         else
         {
-            string query = $"SELECT * FROM expensetracker.expenses wherer id = {id};";
+            string query = $"SELECT * FROM expensetracker.expenses where id = {id};";
             return Ok(DataBase.Service.SqlRead(query));
         }
     }
@@ -44,7 +44,7 @@ public class ExpenseController : ControllerBase
     public IActionResult CreateExpense(Expense expense)
     {
         string query = $"Insert into expenses (Name,Value,Data,Category) Values (@name,@value,@date,@category)";
-        DataBase.Service.SqlNonQuery(query,expense);
+        DataBase.Service.SqlNonQueryExp(query,expense);
         return Ok();
     }
     [HttpDelete]
@@ -57,6 +57,8 @@ public class ExpenseController : ControllerBase
         }
         else
         {
+            string query = $"delete from expenses where id = {id};";
+            DataBase.Service.SqlNonQuery(query);
             return Ok();
         }
     }

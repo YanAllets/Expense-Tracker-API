@@ -5,7 +5,15 @@ namespace ExpenseTrackerApi.DataBase;
 public class Service
 {
     public static string text = null;
-    public static void SqlNonQuery(string query,Expense? expense)
+    public static void SqlNonQuery(string query)
+    {
+        MySqlCommand comando = new MySqlCommand(query,Config.conn);
+
+        Config.conn.Open();
+        comando.ExecuteNonQuery();
+        Config.conn.Close();
+    }
+    public static void SqlNonQueryExp(string query,Expense? expense)
     {
         MySqlCommand comando = new MySqlCommand(query,Config.conn);
 
@@ -46,6 +54,7 @@ public class Service
         Config.conn.Open();
         object ScalarObj = comando.ExecuteScalar();
         int i = Convert.ToInt32(ScalarObj);
+        Config.conn.Close();
         return i;
     }
 }
