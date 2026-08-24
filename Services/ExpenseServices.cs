@@ -6,35 +6,7 @@ using MySqlConnector;
 namespace ExpenseTrackerApi.Services;
 
 public class ExpenseService
-{
-    public List<Expense> expenses { get; set;} = new List<Expense>
-    {
-        new Expense
-        {
-        Id = 1,
-        Name = "Bananas",
-        Value = 10,
-        Category = "Mercado",
-        Date = new DateTime(2026, 10, 10)
-        },
-
-        new Expense
-        {
-        Id = 2,
-        Name = "Maçãs",
-        Value = 20,
-        Category = "Feira",
-        Date = new DateTime(2027, 10, 10)
-        }
-    };
-    
-    public void WriteList(List<Expense> List)
-    {
-        foreach(Expense expense in List)
-        {
-            System.Console.WriteLine(expense);
-        }
-    }
+{ 
     public static bool ExpenseIsReal(int id)
     {
         string query = $"select count(*) from expenses where id = {id}";
@@ -60,6 +32,5 @@ public class ExpenseService
         {
             return false;
         }
-        
     }
 }
