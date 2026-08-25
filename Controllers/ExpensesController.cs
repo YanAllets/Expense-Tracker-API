@@ -46,7 +46,7 @@ public class ExpenseController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult CreateExpense(Expense expense)
+    public IActionResult CreateExpense(ExpenseClass expense)
     {
         return Ok(ExpenseService.CreateExpense(expense));
     }
@@ -65,7 +65,7 @@ public class ExpenseController : ControllerBase
         }
     }
     [HttpPut("{id}")]
-    public IActionResult ChangeExpense(int id,Expense ChangedExp)
+    public IActionResult ChangeExpense(int id,ExpenseClass ChangedExp)
     {
         if (ExpenseService.ChangeExpense(id, ChangedExp))
         {

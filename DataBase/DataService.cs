@@ -12,7 +12,7 @@ public class Service
         comando.ExecuteNonQuery();
         Config.conn.Close();
     }
-    public static void SqlNonQueryExp(string query,Expense? expense)
+    public static void SqlNonQueryExp(string query,ExpenseClass? expense)
     {
         MySqlCommand comando = new MySqlCommand(query,Config.conn);
 

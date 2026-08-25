@@ -65,7 +65,7 @@ public class ExpenseService
 
         return DataBase.Service.SqlRead(query);
     }
-    public static (bool boolean,object obj) CreateExpense(Expense expense)
+    public static (bool boolean,object obj) CreateExpense(ExpenseClass expense)
     {
         if(expense.Value <= 0)
         {
@@ -88,7 +88,7 @@ public class ExpenseService
             return (true,DataBase.Service.SqlRead(query));
         }
     }
-    public static bool ChangeExpense(int id,Expense expense)
+    public static bool ChangeExpense(int id,ExpenseClass expense)
     {
         if (ExpenseIsReal(id) == true && expense.Id > 0)
         {

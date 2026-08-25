@@ -1,6 +1,6 @@
 namespace ExpenseTrackerApi.Models;
 
-public class Expense
+public class ExpenseClass
 {
     public int Id { get; set; }
     public string Name { get; set; }
