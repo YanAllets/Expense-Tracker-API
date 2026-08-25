@@ -27,7 +27,7 @@ public class Service
         comando.ExecuteNonQuery();
         Config.conn.Close();
     }
-    public static string SqlRead(string query)
+    public static string SqlRead(string query,Expense? expense)
     {
         MySqlCommand comando = new MySqlCommand(query,Config.conn);
         Config.conn.Open();
@@ -42,7 +42,7 @@ public class Service
             string category = Convert.ToString(reader["Category"]);
             string date = Convert.ToString(reader["Data"]);
 
-            string line = ($"ID:{id} NAME:{name} VALUE:{value} CATEGORY:{category} DATE:{date} \n");
+            string line = $"ID:{id} NAME:{name} VALUE:{value} CATEGORY:{category} DATE:{date} \n";
             text = text + line;
         }
         Config.conn.Close();

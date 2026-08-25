@@ -19,53 +19,55 @@ public class ExpenseController : ControllerBase
     
     [HttpGet]
 
-    public string GetShowList()
+    public string GetShowList(string? category)
     {
-        string query = "SELECT * FROM expensetracker.expenses;";
-        return DataBase.Service.SqlRead(query);
+        return ExpenseService.GetEveryExpense(category);
     }
 
     [HttpGet("{id}")]
 
     public IActionResult GetExpense(int id)
     {
-        if(ExpenseService.ExpenseIsReal(id) == false)
+        var result = ExpenseService.GetExpense(id);
+        if(result == (false,null))
         {
             return NotFound();
         }
         else
         {
-            string query = $"SELECT * FROM expensetracker.expenses where id = {id};";
-            return Ok(DataBase.Service.SqlRead(query));
+            return Ok(result.line);
         }
     }
 
     [HttpPost]
     public IActionResult CreateExpense(Expense expense)
     {
-        string query = $"Insert into expenses (Name,Value,Data,Category) Values (@name,@value,@date,@category)";
-        DataBase.Service.SqlNonQueryExp(query,expense);
-        return Ok();
+        return Ok(ExpenseService.CreateExpense(expense));
     }
     [HttpDelete]
 
     public IActionResult DeleteExpense(int id)
     {
-        if (ExpenseService.ExpenseIsReal(id) == false)
+        var Response = ExpenseService.DeleteExpense(id);
+        if (Response.boolean == false)
         {
-            return NotFound();
+            return NotFound(Response.line);
         }
         else
         {
-            string query = $"delete from expenses where id = {id};";
-            DataBase.Service.SqlNonQuery(query);
-            return Ok();
+            return Ok(Response);
         }
     }
     [HttpPut("{id}")]
     public IActionResult ChangeExpense(int id,Expense ChangedExp)
     {
-        ExpenseService.ChangeExpense(id,ChangedExp);
-        return GetExpense(id);
+        if (ExpenseService.ChangeExpense(id, ChangedExp))
+        {
+            return Ok(GetExpense(id));
+        }
+        else
+        {
+            return NotFound("There is no expense with this id or invalid values");
+        }
     }
 }
