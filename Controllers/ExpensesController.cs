@@ -18,10 +18,16 @@ public class ExpenseController : ControllerBase
     }
     
     [HttpGet]
-
-    public string GetShowList(string? category)
+    
+    public string GetShowList(
+        int? id,
+        string? name,
+        decimal? value,
+        string? category,
+        DateTime? date
+    )
     {
-        return ExpenseService.GetEveryExpense(category);
+        return ExpenseService.GetEveryExpense(id,name,value,category,date);
     }
 
     [HttpGet("{id}")]

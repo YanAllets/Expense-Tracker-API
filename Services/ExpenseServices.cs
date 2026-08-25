@@ -32,18 +32,38 @@ public class ExpenseService
             return (true,"Expense Deleted");
         }
     }
-    public static string GetEveryExpense(string? category)
+    public static string GetEveryExpense(
+        int? id,
+        string? name,
+        decimal? value,
+        string? category,
+        DateTime? date
+    )
     {
-        if(category == null)
+        string query = "SELECT * FROM expenses WHERE 1=1";
+        if (id != null)
         {
-            string queryNull = "SELECT * FROM expensetracker.expenses;";
-            return DataBase.Service.SqlRead(queryNull,null);
+            query += $"\n AND Id = {id}";
         }
-        else
+        if (name != null)
         {
-            string query = "SELECT * FROM expensetracker.expenses where Category = @category;";
-            return DataBase.Service.SqlRead(query,null);
+            query += $"\n AND Name = '{name}'";
         }
+        if (value != null)
+        {
+            query += $"\n AND Value = {value}";
+        }
+        if (category != null)
+        {
+            query += $"\n AND Category = '{category}'";
+        }
+        if (date != null)
+        {
+            query += $"\n AND Date = '{date}'";
+        }
+        query = query + ";";
+
+        return DataBase.Service.SqlRead(query);
     }
     public static (bool boolean,object obj) CreateExpense(Expense expense)
     {
@@ -65,7 +85,7 @@ public class ExpenseService
         else
         {
             string query = $"SELECT * FROM expensetracker.expenses where id = {id};";
-            return (true,DataBase.Service.SqlRead(query,null));
+            return (true,DataBase.Service.SqlRead(query));
         }
     }
     public static bool ChangeExpense(int id,Expense expense)

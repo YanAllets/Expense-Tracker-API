@@ -4,7 +4,6 @@ using MySqlConnector;
 namespace ExpenseTrackerApi.DataBase;
 public class Service
 {
-    public static string text = null;
     public static void SqlNonQuery(string query)
     {
         MySqlCommand comando = new MySqlCommand(query,Config.conn);
@@ -27,12 +26,12 @@ public class Service
         comando.ExecuteNonQuery();
         Config.conn.Close();
     }
-    public static string SqlRead(string query,Expense? expense)
+    public static string SqlRead(string query)
     {
+        string text = null;
         MySqlCommand comando = new MySqlCommand(query,Config.conn);
         Config.conn.Open();
         MySqlDataReader reader = comando.ExecuteReader();
-        
 
         while (reader.Read())
         {
