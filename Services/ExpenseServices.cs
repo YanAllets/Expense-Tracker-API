@@ -32,7 +32,7 @@ public class ExpenseService
             return (true,"Expense Deleted");
         }
     }
-    public static string GetEveryExpense(
+    public static List<ExpenseClass> GetEveryExpense(
         int? id,
         string? name,
         decimal? value,
@@ -71,12 +71,12 @@ public class ExpenseService
         {
             
         }
-        string query = $"Insert into expenses (Name,Value,Data,Category) Values (@name,@value,@date,@category)";
+        string query = $"Insert into expenses (Name,Value,Date,Category) Values (@name,@value,@date,@category)";
         DataBase.Service.SqlNonQueryExp(query,expense);
 
         return (true,expense);
     }
-    public static (bool boolean,string? line) GetExpense(int id)
+    public static (bool boolean,List<ExpenseClass>? line) GetExpense(int id)
     {
         if(ExpenseService.ExpenseIsReal(id) == false)
         {
@@ -90,9 +90,9 @@ public class ExpenseService
     }
     public static bool ChangeExpense(int id,ExpenseClass expense)
     {
-        if (ExpenseIsReal(id) == true && expense.Id > 0)
+        if (ExpenseIsReal(id) == true && expense.Value > 0)
         {
-            string query = $"UPDATE expenses SET Name = @name,Value = @value,Data = @date,Category = @category WHERE id = @id";
+            string query = $"UPDATE expenses SET Name = @name,Value = @value,Date = @date,Category = @category WHERE id = {id}";
             DataBase.Service.SqlNonQueryExp(query,expense);
             return true;
         }

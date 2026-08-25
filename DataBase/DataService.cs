@@ -26,26 +26,29 @@ public class Service
         comando.ExecuteNonQuery();
         Config.conn.Close();
     }
-    public static string SqlRead(string query)
+    public static List<ExpenseClass> SqlRead(string query)
     {
-        string text = null;
         MySqlCommand comando = new MySqlCommand(query,Config.conn);
         Config.conn.Open();
         MySqlDataReader reader = comando.ExecuteReader();
 
+        List<ExpenseClass> list = new List<ExpenseClass>();
+
         while (reader.Read())
         {
-            string id = Convert.ToString(reader["Id"]);
-            string name = Convert.ToString(reader["Name"]);
-            string value = Convert.ToString(reader["Value"]);
-            string category = Convert.ToString(reader["Category"]);
-            string date = Convert.ToString(reader["Data"]);
+            ExpenseClass expense = new ExpenseClass()
+            {
+                Id = Convert.ToInt32(reader["Id"]),
+                Name = Convert.ToString(reader["Name"]),
+                Value = Convert.ToDecimal(reader["Value"]),
+                Category = Convert.ToString(reader["Category"]),
+                Date = Convert.ToDateTime(reader["Date"])
+            };
 
-            string line = $"ID:{id} NAME:{name} VALUE:{value} CATEGORY:{category} DATE:{date} \n";
-            text = text + line;
+            list.Add(expense);
         }
         Config.conn.Close();
-        return text;
+        return list;
     }
     public static int SqlScalar(string query)
     {

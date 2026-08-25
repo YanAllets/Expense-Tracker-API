@@ -19,7 +19,7 @@ public class ExpenseController : ControllerBase
     
     [HttpGet]
     
-    public string GetShowList(
+    public List<ExpenseClass> GetShowList(
         int? id,
         string? name,
         decimal? value,
