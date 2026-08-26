@@ -48,7 +48,15 @@ public class ExpenseController : ControllerBase
     [HttpPost]
     public IActionResult CreateExpense(ExpenseClass expense)
     {
-        return Ok(ExpenseService.CreateExpense(expense));
+        var result = ExpenseService.CreateExpense(expense);
+        if(result.boolean)
+        {
+            return Ok(result.obj);
+        }
+        else
+        {
+            return NotFound("Invalid Values");
+        }
     }
     [HttpDelete]
 

@@ -67,14 +67,16 @@ public class ExpenseService
     }
     public static (bool boolean,object obj) CreateExpense(ExpenseClass expense)
     {
-        if(expense.Value <= 0)
+        if(Validate(expense) == true)
         {
-            
+            string query = $"Insert into expenses (Name,Value,Date,Category) Values (@name,@value,@date,@category)";
+            DataBase.Service.SqlNonQueryExp(query,expense);
+            return (true,expense);
         }
-        string query = $"Insert into expenses (Name,Value,Date,Category) Values (@name,@value,@date,@category)";
-        DataBase.Service.SqlNonQueryExp(query,expense);
-
-        return (true,expense);
+        else
+        {
+            return (false,null);
+        }
     }
     public static (bool boolean,List<ExpenseClass>? line) GetExpense(int id)
     {
@@ -88,6 +90,7 @@ public class ExpenseService
             return (true,DataBase.Service.SqlRead(query));
         }
     }
+    
     public static bool ChangeExpense(int id,ExpenseClass expense)
     {
         if (ExpenseIsReal(id) == true && expense.Value > 0)
@@ -99,6 +102,22 @@ public class ExpenseService
         else
         {
             return false;
+        }
+    }
+    //checks if expense is valid by rejecting null,empty or invalid values 
+    public static bool Validate(ExpenseClass expense)
+    {
+        if(
+            string.IsNullOrWhiteSpace(expense.Name) ||
+            string.IsNullOrWhiteSpace(expense.Category) ||
+            expense.Value <= 0
+        )
+        {
+            return false;
+        }
+        else
+        {
+            return true;
         }
     }
 }
