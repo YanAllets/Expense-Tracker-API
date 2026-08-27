@@ -20,6 +20,8 @@ public class ExpenseController : ControllerBase
     [HttpGet]
     
     public List<ExpenseClass> GetShowList(
+        int? page,
+        int? pageSize,
         int? id,
         string? name,
         decimal? value,
@@ -27,7 +29,7 @@ public class ExpenseController : ControllerBase
         DateTime? date
     )
     {
-        return ExpenseService.GetEveryExpense(id,name,value,category,date);
+        return ExpenseService.GetEveryExpense(page,pageSize,id,name,value,category,date);
     }
 
     [HttpGet("{id}")]

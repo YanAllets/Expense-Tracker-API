@@ -33,6 +33,8 @@ public class ExpenseService
         }
     }
     public static List<ExpenseClass> GetEveryExpense(
+        int? page,
+        int? pageSize,
         int? id,
         string? name,
         decimal? value,
@@ -41,6 +43,8 @@ public class ExpenseService
     )
     {
         string query = "SELECT * FROM expenses WHERE 1=1";
+        int? offset = (page - 1) * pageSize;
+
         if (id != null)
         {
             query += $"\n AND Id = {id}";
@@ -61,6 +65,11 @@ public class ExpenseService
         {
             query += $"\n AND Date = '{date}'";
         }
+        if (page != null && pageSize != null)
+        {
+            query += $"\n LIMIT {pageSize} offset {offset}";
+        }
+
         query = query + ";";
 
         return DataBase.Service.SqlRead(query);
@@ -90,7 +99,7 @@ public class ExpenseService
             return (true,DataBase.Service.SqlRead(query));
         }
     }
-    
+
     public static bool ChangeExpense(int id,ExpenseClass expense)
     {
         if (ExpenseIsReal(id) == true && expense.Value > 0)
