@@ -26,7 +26,7 @@ public class Service
         comando.ExecuteNonQuery();
         Config.conn.Close();
     }
-    public static List<ExpenseClass> SqlRead(string query)
+    public static List<ExpenseClass> SqlRead(string query,int? type)
     {
         MySqlCommand comando = new MySqlCommand(query,Config.conn);
         Config.conn.Open();
@@ -35,17 +35,27 @@ public class Service
         List<ExpenseClass> list = new List<ExpenseClass>();
 
         while (reader.Read())
-        {
-            ExpenseClass expense = new ExpenseClass()
+        {   if(type == null)
             {
-                Id = Convert.ToInt32(reader["Id"]),
-                Name = Convert.ToString(reader["Name"]),
-                Value = Convert.ToDecimal(reader["Value"]),
-                Category = Convert.ToString(reader["Category"]),
-                Date = Convert.ToDateTime(reader["Date"])
-            };
-
+                ExpenseClass expense = new ExpenseClass()
+                {
+                    Id = Convert.ToInt32(reader["Id"]),
+                    Name = Convert.ToString(reader["Name"]),
+                    Value = Convert.ToDecimal(reader["Value"]),
+                    Category = Convert.ToString(reader["Category"]),
+                    Date = Convert.ToDateTime(reader["Date"])
+                };
             list.Add(expense);
+            }
+            else
+            {
+                ExpenseClass expense = new ExpenseClass()
+                {
+                    Value = Convert.ToDecimal(reader["Value"]),
+                    Category = Convert.ToString(reader["Category"]),
+                };
+            list.Add(expense);
+            }
         }
         Config.conn.Close();
         return list;

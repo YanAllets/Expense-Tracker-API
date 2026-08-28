@@ -34,3 +34,4 @@ C:\Users\Yan\OneDrive\Documentos\Project ETAPI\ExpenseTrackerApi\obj\Debug\net9.
 C:\Users\Yan\OneDrive\Documentos\Project ETAPI\ExpenseTrackerApi\obj\Debug\net9.0\ExpenseTrackerApi.pdb
 C:\Users\Yan\OneDrive\Documentos\Project ETAPI\ExpenseTrackerApi\obj\Debug\net9.0\ExpenseTrackerApi.genruntimeconfig.cache
 C:\Users\Yan\OneDrive\Documentos\Project ETAPI\ExpenseTrackerApi\obj\Debug\net9.0\ref\ExpenseTrackerApi.dll
+C:\Users\Yan\OneDrive\Documentos\Project ETAPI\ExpenseTrackerApi\bin\Debug\net9.0\MySqlConnector.dll

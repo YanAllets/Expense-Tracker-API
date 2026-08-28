@@ -32,6 +32,12 @@ public class ExpenseController : ControllerBase
         return ExpenseService.GetEveryExpense(page,pageSize,id,name,value,category,date);
     }
 
+    [HttpGet("category")]
+    public List<ExpenseClass> GetByCategory()
+    {
+        return ExpenseService.SpendByCategory();
+    }
+
     [HttpGet("{id}")]
 
     public IActionResult GetExpense(int id)
