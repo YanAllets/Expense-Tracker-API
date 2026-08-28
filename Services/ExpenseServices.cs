@@ -72,7 +72,7 @@ public class ExpenseService
 
         query = query + ";";
 
-        return DataBase.Service.SqlRead(query,null);
+        return DataBase.Service.SqlReadExpense(query);
     }
     public static (bool boolean,object obj) CreateExpense(ExpenseClass expense)
     {
@@ -96,7 +96,7 @@ public class ExpenseService
         else
         {
             string query = $"SELECT * FROM expensetracker.expenses where id = {id};";
-            return (true,DataBase.Service.SqlRead(query,null));
+            return (true,DataBase.Service.SqlReadExpense(query));
         }
     }
 
@@ -129,9 +129,9 @@ public class ExpenseService
             return true;
         }
     }
-    public static List<ExpenseClass> SpendByCategory()
+    public static List<CategoryClass> SpendByCategory()
     {
         string query = $"Select category,Sum(Value) as Value FROM expenses group by category";
-        return DataBase.Service.SqlRead(query,1);
+        return DataBase.Service.SqlReadCategory(query);
     }
 }

@@ -33,7 +33,7 @@ public class ExpenseController : ControllerBase
     }
 
     [HttpGet("category")]
-    public List<ExpenseClass> GetByCategory()
+    public List<CategoryClass> GetByCategory()
     {
         return ExpenseService.SpendByCategory();
     }

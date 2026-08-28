@@ -26,7 +26,7 @@ public class Service
         comando.ExecuteNonQuery();
         Config.conn.Close();
     }
-    public static List<ExpenseClass> SqlRead(string query,int? type)
+    public static List<ExpenseClass> SqlReadExpense(string query)
     {
         MySqlCommand comando = new MySqlCommand(query,Config.conn);
         Config.conn.Open();
@@ -35,27 +35,36 @@ public class Service
         List<ExpenseClass> list = new List<ExpenseClass>();
 
         while (reader.Read())
-        {   if(type == null)
+        {   
+            ExpenseClass expense = new ExpenseClass()
             {
-                ExpenseClass expense = new ExpenseClass()
-                {
-                    Id = Convert.ToInt32(reader["Id"]),
-                    Name = Convert.ToString(reader["Name"]),
-                    Value = Convert.ToDecimal(reader["Value"]),
-                    Category = Convert.ToString(reader["Category"]),
-                    Date = Convert.ToDateTime(reader["Date"])
-                };
+                Id = Convert.ToInt32(reader["Id"]),
+                Name = Convert.ToString(reader["Name"]),
+                Value = Convert.ToDecimal(reader["Value"]),
+                Category = Convert.ToString(reader["Category"]),
+                Date = Convert.ToDateTime(reader["Date"])
+            };
             list.Add(expense);
-            }
-            else
+        }
+        Config.conn.Close();
+        return list;
+    }
+     public static List<CategoryClass> SqlReadCategory(string query)
+    {
+        MySqlCommand comando = new MySqlCommand(query,Config.conn);
+        Config.conn.Open();
+        MySqlDataReader reader = comando.ExecuteReader();
+
+        List<CategoryClass> list = new List<CategoryClass>();
+
+        while (reader.Read())
+        {   
+            CategoryClass expense = new CategoryClass()
             {
-                ExpenseClass expense = new ExpenseClass()
-                {
-                    Value = Convert.ToDecimal(reader["Value"]),
-                    Category = Convert.ToString(reader["Category"]),
-                };
+                Value = Convert.ToDecimal(reader["Value"]),
+                Category = Convert.ToString(reader["Category"]),
+            };
             list.Add(expense);
-            }
         }
         Config.conn.Close();
         return list;
