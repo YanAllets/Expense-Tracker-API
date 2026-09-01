@@ -38,6 +38,12 @@ public class ExpenseController : ControllerBase
         return ExpenseService.SpendByCategory();
     }
 
+    [HttpGet("total")]
+    public List<CategoryClass> GetTotal()
+    {
+        return ExpenseService.SpendTotal();
+    }
+
     [HttpGet("{id}")]
 
     public IActionResult GetExpense(int id)
@@ -77,7 +83,7 @@ public class ExpenseController : ControllerBase
         }
         else
         {
-            return Ok(Response);
+            return Ok(Response.line);
         }
     }
     [HttpPut("{id}")]

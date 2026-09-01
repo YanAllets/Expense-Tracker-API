@@ -9,8 +9,9 @@ public class ExpenseService
 { 
     public static bool ExpenseIsReal(int id)
     {
-        string query = $"select count(*) from expenses where id = {id}";
-        if (DataBase.Service.SqlScalar(query) == 1)
+        string query = "select count(*) from expenses where id = @id";
+
+        if (DataBase.Service.SqlScalarExp(query,id) == 1)
         {
             return true;
         }
@@ -27,8 +28,8 @@ public class ExpenseService
         }
         else
         {
-            string query = $"delete from expenses where id = {id};";
-            DataBase.Service.SqlNonQuery(query);
+            string query = "delete from expenses where id = @id;";
+            DataBase.Service.SqlNonQuery(query,id);
             return (true,"Expense Deleted");
         }
     }
@@ -47,23 +48,23 @@ public class ExpenseService
 
         if (id != null)
         {
-            query += $"\n AND Id = {id}";
+            query += $"\n AND Id = @id";
         }
         if (name != null)
         {
-            query += $"\n AND Name = '{name}'";
+            query += $"\n AND Name = @name";
         }
         if (value != null)
         {
-            query += $"\n AND Value = {value}";
+            query += $"\n AND Value = @value";
         }
         if (category != null)
         {
-            query += $"\n AND Category = '{category}'";
+            query += $"\n AND Category = @category";
         }
         if (date != null)
         {
-            query += $"\n AND Date = '{date}'";
+            query += $"\n AND Date = @date";
         }
         if (page != null && pageSize != null)
         {
@@ -78,7 +79,7 @@ public class ExpenseService
     {
         if(Validate(expense) == true)
         {
-            string query = $"Insert into expenses (Name,Value,Date,Category) Values (@name,@value,@date,@category)";
+            string query = "Insert into expenses (Name,Value,Date,Category) Values (@name,@value,@date,@category)";
             DataBase.Service.SqlNonQueryExp(query,expense);
             return (true,expense);
         }
@@ -95,7 +96,7 @@ public class ExpenseService
         }
         else
         {
-            string query = $"SELECT * FROM expensetracker.expenses where id = {id};";
+            string query = "SELECT * FROM expensetracker.expenses where id = @id;";
             return (true,DataBase.Service.SqlReadExpense(query));
         }
     }
@@ -133,5 +134,10 @@ public class ExpenseService
     {
         string query = $"Select category,Sum(Value) as Value FROM expenses group by category";
         return DataBase.Service.SqlReadCategory(query);
+    }
+    public static List<CategoryClass> SpendTotal()
+    {
+        string query = $"Select Sum(Value) as Value FROM expenses;";
+        return DataBase.Service.SqlReadTotal(query);
     }
 }

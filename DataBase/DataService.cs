@@ -4,11 +4,12 @@ using MySqlConnector;
 namespace ExpenseTrackerApi.DataBase;
 public class Service
 {
-    public static void SqlNonQuery(string query)
+    public static void SqlNonQuery(string query,int id)
     {
         MySqlCommand comando = new MySqlCommand(query,Config.conn);
 
         Config.conn.Open();
+        comando.Parameters.AddWithValue("@id",id);
         comando.ExecuteNonQuery();
         Config.conn.Close();
     }
@@ -69,12 +70,45 @@ public class Service
         Config.conn.Close();
         return list;
     }
+    public static List<CategoryClass> SqlReadTotal(string query)
+    {
+        MySqlCommand comando = new MySqlCommand(query,Config.conn);
+        Config.conn.Open();
+        MySqlDataReader reader = comando.ExecuteReader();
+
+        List<CategoryClass> list = new List<CategoryClass>();
+
+        while (reader.Read())
+        {   
+            CategoryClass expense = new CategoryClass()
+            {
+                Value = Convert.ToDecimal(reader["Value"]),
+                Category = "Total",
+            };
+            list.Add(expense);
+        }
+        Config.conn.Close();
+        return list;
+    }
     public static int SqlScalar(string query)
     {
         MySqlCommand comando = new MySqlCommand(query,Config.conn);
         Config.conn.Open();
         object ScalarObj = comando.ExecuteScalar();
         int i = Convert.ToInt32(ScalarObj);
+        Config.conn.Close();
+        return i;
+    }
+    public static int SqlScalarExp(string query,int id)
+    {
+        MySqlCommand comando = new MySqlCommand(query,Config.conn);
+        Config.conn.Open();
+
+        comando.Parameters.AddWithValue("@id",id);
+
+        object ScalarObj = comando.ExecuteScalar();
+        int i = Convert.ToInt32(ScalarObj);
+
         Config.conn.Close();
         return i;
     }
