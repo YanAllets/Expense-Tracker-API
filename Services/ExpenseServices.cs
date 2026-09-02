@@ -48,32 +48,32 @@ public class ExpenseService
 
         if (id != null)
         {
-            query += $"\n AND Id = @id";
+            query += "\n AND Id = @id";
         }
         if (name != null)
         {
-            query += $"\n AND Name = @name";
+            query += "\n AND Name = @name";
         }
         if (value != null)
         {
-            query += $"\n AND Value = @value";
+            query += "\n AND Value = @value";
         }
         if (category != null)
         {
-            query += $"\n AND Category = @category";
+            query += "\n AND Category = @category";
         }
         if (date != null)
         {
-            query += $"\n AND Date = @date";
+            query += "\n AND Date = @date";
         }
         if (page != null && pageSize != null)
         {
-            query += $"\n LIMIT {pageSize} offset {offset}";
+            query += $"\n LIMIT @pageSize offset @offset";
         }
 
         query = query + ";";
 
-        return DataBase.Service.SqlReadExpense(query);
+        return DataBase.Service.SqlReadExpense(query,id,page,pageSize);
     }
     public static (bool boolean,object obj) CreateExpense(ExpenseClass expense)
     {
@@ -97,7 +97,7 @@ public class ExpenseService
         else
         {
             string query = "SELECT * FROM expensetracker.expenses where id = @id;";
-            return (true,DataBase.Service.SqlReadExpense(query));
+            return (true,DataBase.Service.SqlReadExpense(query,id,null,null));
         }
     }
 
@@ -105,7 +105,8 @@ public class ExpenseService
     {
         if (ExpenseIsReal(id) == true && expense.Value > 0)
         {
-            string query = $"UPDATE expenses SET Name = @name,Value = @value,Date = @date,Category = @category WHERE id = {id}";
+            expense.Id = id;
+            string query = "UPDATE expenses SET Name = @name,Value = @value,Date = @date,Category = @category WHERE id = @id";
             DataBase.Service.SqlNonQueryExp(query,expense);
             return true;
         }
@@ -132,12 +133,12 @@ public class ExpenseService
     }
     public static List<CategoryClass> SpendByCategory()
     {
-        string query = $"Select category,Sum(Value) as Value FROM expenses group by category";
+        string query = "Select category,Sum(Value) as Value FROM expenses group by category";
         return DataBase.Service.SqlReadCategory(query);
     }
     public static List<CategoryClass> SpendTotal()
     {
-        string query = $"Select Sum(Value) as Value FROM expenses;";
+        string query = "Select Sum(Value) as Value FROM expenses;";
         return DataBase.Service.SqlReadTotal(query);
     }
 }

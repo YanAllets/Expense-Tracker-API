@@ -17,19 +17,24 @@ public class Service
     {
         MySqlCommand comando = new MySqlCommand(query,Config.conn);
 
-        comando.Parameters.AddWithValue("@id",expense.Id);
-        comando.Parameters.AddWithValue("@name",expense.Name);
-        comando.Parameters.AddWithValue("@value",expense.Value);
-        comando.Parameters.AddWithValue("@date",expense.Date);
-        comando.Parameters.AddWithValue("@category",expense.Category);
+        comando.Parameters.Add("@id", MySqlDbType.Int32).Value = expense.Id;
+        comando.Parameters.Add("@name", MySqlDbType.VarChar).Value = expense.Name;
+        comando.Parameters.Add("@value", MySqlDbType.Decimal).Value = expense.Value;
+        comando.Parameters.Add("@date", MySqlDbType.DateTime).Value = expense.Date;
+        comando.Parameters.Add("@category", MySqlDbType.VarChar).Value = expense.Category;
 
         Config.conn.Open();
         comando.ExecuteNonQuery();
         Config.conn.Close();
     }
-    public static List<ExpenseClass> SqlReadExpense(string query)
+    public static List<ExpenseClass> SqlReadExpense(string query,int? id,int? page,int? pageSize)
     {
         MySqlCommand comando = new MySqlCommand(query,Config.conn);
+
+        comando.Parameters.AddWithValue("@id",id);
+        comando.Parameters.AddWithValue("@id",page);
+        comando.Parameters.AddWithValue("@id",pageSize);
+    
         Config.conn.Open();
         MySqlDataReader reader = comando.ExecuteReader();
 
@@ -53,6 +58,7 @@ public class Service
      public static List<CategoryClass> SqlReadCategory(string query)
     {
         MySqlCommand comando = new MySqlCommand(query,Config.conn);
+
         Config.conn.Open();
         MySqlDataReader reader = comando.ExecuteReader();
 
@@ -102,9 +108,10 @@ public class Service
     public static int SqlScalarExp(string query,int id)
     {
         MySqlCommand comando = new MySqlCommand(query,Config.conn);
-        Config.conn.Open();
 
         comando.Parameters.AddWithValue("@id",id);
+
+        Config.conn.Open();
 
         object ScalarObj = comando.ExecuteScalar();
         int i = Convert.ToInt32(ScalarObj);
