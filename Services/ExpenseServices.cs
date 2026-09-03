@@ -73,7 +73,7 @@ public class ExpenseService
 
         query = query + ";";
 
-        return DataBase.Service.SqlReadExpense(query,id);
+        return DataBase.Service.SqlReadExpFilter(query,offset,pageSize,id,name,value,category,date);
     }
     public static (bool boolean,object obj) CreateExpense(ExpenseClass expense)
     {

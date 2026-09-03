@@ -31,7 +31,50 @@ public class Service
     {
         MySqlCommand comando = new MySqlCommand(query,Config.conn);
 
-        comando.Parameters.AddWithValue("@id",MySqlDbType.Int32).Value = id;
+        comando.Parameters.Add("@id",MySqlDbType.Int32).Value = id;
+    
+        Config.conn.Open();
+        MySqlDataReader reader = comando.ExecuteReader();
+
+        List<ExpenseClass> list = new List<ExpenseClass>();
+
+        System.Console.WriteLine(query);
+        while (reader.Read())
+        {   
+            ExpenseClass expense = new ExpenseClass()
+            {
+                Id = Convert.ToInt32(reader["Id"]),
+                Name = Convert.ToString(reader["Name"]),
+                Value = Convert.ToDecimal(reader["Value"]),
+                Category = Convert.ToString(reader["Category"]),
+                Date = Convert.ToDateTime(reader["Date"])
+            };
+            list.Add(expense);
+        }
+
+        Config.conn.Close();
+        return list;
+    }
+    public static List<ExpenseClass> SqlReadExpFilter(
+        string query,
+        int? offset,
+        int? pageSize,
+        int? id,
+        string? name,
+        decimal? value,
+        string? category,
+        DateTime? date
+    )
+    {
+        MySqlCommand comando = new MySqlCommand(query,Config.conn);
+
+        comando.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
+        comando.Parameters.Add("@name", MySqlDbType.VarChar).Value = name;
+        comando.Parameters.Add("@value", MySqlDbType.Decimal).Value = value;
+        comando.Parameters.Add("@date", MySqlDbType.DateTime).Value = date;
+        comando.Parameters.Add("@category", MySqlDbType.VarChar).Value = category;
+        comando.Parameters.Add("@offset", MySqlDbType.VarChar).Value = offset;
+        comando.Parameters.Add("@pageSize", MySqlDbType.VarChar).Value = pageSize;
     
         Config.conn.Open();
         MySqlDataReader reader = comando.ExecuteReader();
@@ -50,6 +93,7 @@ public class Service
             };
             list.Add(expense);
         }
+
         Config.conn.Close();
         return list;
     }
