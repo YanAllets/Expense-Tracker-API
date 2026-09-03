@@ -68,12 +68,12 @@ public class ExpenseService
         }
         if (page != null && pageSize != null)
         {
-            query += $"\n LIMIT @pageSize offset @offset";
+            query += $"\n LIMIT {pageSize} offset {offset}";
         }
 
         query = query + ";";
 
-        return DataBase.Service.SqlReadExpense(query,id,page,pageSize);
+        return DataBase.Service.SqlReadExpense(query,id);
     }
     public static (bool boolean,object obj) CreateExpense(ExpenseClass expense)
     {
@@ -97,7 +97,7 @@ public class ExpenseService
         else
         {
             string query = "SELECT * FROM expensetracker.expenses where id = @id;";
-            return (true,DataBase.Service.SqlReadExpense(query,id,null,null));
+            return (true,DataBase.Service.SqlReadExpense(query,id));
         }
     }
 

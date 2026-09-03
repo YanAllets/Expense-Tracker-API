@@ -27,13 +27,11 @@ public class Service
         comando.ExecuteNonQuery();
         Config.conn.Close();
     }
-    public static List<ExpenseClass> SqlReadExpense(string query,int? id,int? page,int? pageSize)
+    public static List<ExpenseClass> SqlReadExpense(string query,int? id)
     {
         MySqlCommand comando = new MySqlCommand(query,Config.conn);
 
-        comando.Parameters.AddWithValue("@id",id);
-        comando.Parameters.AddWithValue("@id",page);
-        comando.Parameters.AddWithValue("@id",pageSize);
+        comando.Parameters.AddWithValue("@id",MySqlDbType.Int32).Value = id;
     
         Config.conn.Open();
         MySqlDataReader reader = comando.ExecuteReader();
