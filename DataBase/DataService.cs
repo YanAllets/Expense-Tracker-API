@@ -1,3 +1,4 @@
+using System.Reflection.Metadata;
 using ExpenseTrackerApi.Models;
 using MySqlConnector;
 
@@ -27,18 +28,17 @@ public class Service
         comando.ExecuteNonQuery();
         Config.conn.Close();
     }
-    public static List<ExpenseClass> SqlReadExpense(string query,int? id)
+    public static ExpenseClass SqlReadExpense(string query,int? id)
     {
         MySqlCommand comando = new MySqlCommand(query,Config.conn);
 
         comando.Parameters.Add("@id",MySqlDbType.Int32).Value = id;
-    
+
         Config.conn.Open();
         MySqlDataReader reader = comando.ExecuteReader();
 
         List<ExpenseClass> list = new List<ExpenseClass>();
 
-        System.Console.WriteLine(query);
         while (reader.Read())
         {   
             ExpenseClass expense = new ExpenseClass()
@@ -53,7 +53,9 @@ public class Service
         }
 
         Config.conn.Close();
-        return list;
+
+        System.Console.WriteLine(list.FirstOrDefault().Name);
+        return list.FirstOrDefault();
     }
     public static List<ExpenseClass> SqlReadExpFilter(
         string query,
@@ -118,7 +120,7 @@ public class Service
         Config.conn.Close();
         return list;
     }
-    public static List<CategoryClass> SqlReadTotal(string query)
+    public static CategoryClass SqlReadTotal(string query)
     {
         MySqlCommand comando = new MySqlCommand(query,Config.conn);
         Config.conn.Open();
@@ -136,7 +138,7 @@ public class Service
             list.Add(expense);
         }
         Config.conn.Close();
-        return list;
+        return list.FirstOrDefault();
     }
     public static int SqlScalar(string query)
     {

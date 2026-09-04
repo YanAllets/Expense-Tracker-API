@@ -20,7 +20,7 @@ public class ExpenseService
             return false;
         }
     }
-    public static (bool boolean,string line) DeleteExpense(int id)
+    public static (bool success,string message) DeleteExpense(int id)
     {
         string query = "select count(id) as count from expenses where id = 3;delete from expenses where id = 2;";
         if(DataBase.Service.SqlScalarExp(query,id) == 1)
@@ -71,7 +71,7 @@ public class ExpenseService
 
         return DataBase.Service.SqlReadExpFilter(query,offset,pageSize,id,name,value,category,date);
     }
-    public static (bool boolean,object obj) CreateExpense(ExpenseClass expense)
+    public static (bool success,object expense) CreateExpense(ExpenseClass expense)
     {
         if(Validate(expense) == true)
         {
@@ -84,7 +84,7 @@ public class ExpenseService
             return (false,null);
         }
     }
-    public static (bool boolean,List<ExpenseClass>? line) GetExpense(int id)
+    public static (bool success,ExpenseClass? expenseClass) GetExpense(int id)
     {
         if(ExpenseService.ExpenseIsReal(id) == false)
         {
@@ -132,7 +132,7 @@ public class ExpenseService
         string query = "Select category,Sum(Value) as Value FROM expenses group by category";
         return DataBase.Service.SqlReadCategory(query);
     }
-    public static List<CategoryClass> SpendTotal()
+    public static CategoryClass SpendTotal()
     {
         string query = "Select Sum(Value) as Value FROM expenses;";
         return DataBase.Service.SqlReadTotal(query);

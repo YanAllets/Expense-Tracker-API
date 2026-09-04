@@ -55,7 +55,7 @@ public class ExpenseController : ControllerBase
         }
         else
         {
-            return Ok(result.line);
+            return Ok(result.expenseClass);
         }
     }
 
