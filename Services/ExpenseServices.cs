@@ -22,16 +22,12 @@ public class ExpenseService
     }
     public static (bool boolean,string line) DeleteExpense(int id)
     {
-        if (ExpenseService.ExpenseIsReal(id) == false)
+        string query = "select count(id) as count from expenses where id = 3;delete from expenses where id = 2;";
+        if(DataBase.Service.SqlScalarExp(query,id) == 1)
         {
-            return (false,"There is no Expense with this id");
-        }
-        else
-        {
-            string query = "delete from expenses where id = @id;";
-            DataBase.Service.SqlNonQuery(query,id);
             return (true,"Expense Deleted");
         }
+        return (false,"there is no expense with this id");
     }
     public static List<ExpenseClass> GetEveryExpense(
         int? page,
@@ -68,7 +64,7 @@ public class ExpenseService
         }
         if (page != null && pageSize != null)
         {
-            query += $"\n LIMIT {pageSize} offset {offset}";
+            query += $"\n LIMIT @pageSize offset @offset";
         }
 
         query = query + ";";
