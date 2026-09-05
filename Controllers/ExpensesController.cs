@@ -32,18 +32,6 @@ public class ExpenseController : ControllerBase
         return ExpenseService.GetEveryExpense(page,pageSize,id,name,value,category,date);
     }
 
-    [HttpGet("category")]
-    public List<CategoryClass> GetByCategory()
-    {
-        return ExpenseService.SpendByCategory();
-    }
-
-    [HttpGet("total")]
-    public List<CategoryClass> GetTotal()
-    {
-        return ExpenseService.SpendTotal();
-    }
-
     [HttpGet("{id}")]
 
     public IActionResult GetExpense(int id)
@@ -59,31 +47,30 @@ public class ExpenseController : ControllerBase
         }
     }
 
+    [HttpGet("category")]
+    public List<CategoryClass> GetByCategory()
+    {
+        return ExpenseService.GetByCategory();
+    }
+
+    [HttpGet("total")]
+    public CategoryClass GetTotal()
+    {
+        return ExpenseService.GetTotal();
+    }
+
+
     [HttpPost]
     public IActionResult CreateExpense(ExpenseClass expense)
     {
         var result = ExpenseService.CreateExpense(expense);
-        if(result.boolean)
+        if(result.success)
         {
-            return Ok(result.obj);
+            return Ok(result.expense);
         }
         else
         {
             return NotFound("Invalid Values");
-        }
-    }
-    [HttpDelete]
-
-    public IActionResult DeleteExpense(int id)
-    {
-        var Response = ExpenseService.DeleteExpense(id);
-        if (Response.boolean == false)
-        {
-            return NotFound(Response.line);
-        }
-        else
-        {
-            return Ok(Response.line);
         }
     }
     [HttpPut("{id}")]
@@ -96,6 +83,20 @@ public class ExpenseController : ControllerBase
         else
         {
             return NotFound("There is no expense with this id or invalid values");
+        }
+    }
+    [HttpDelete]
+
+    public IActionResult DeleteExpense(int id)
+    {
+        var Response = ExpenseService.DeleteExpense(id);
+        if (Response.success == false)
+        {
+            return NotFound(Response.message);
+        }
+        else
+        {
+            return Ok(Response.message);
         }
     }
 }

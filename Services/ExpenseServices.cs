@@ -2,32 +2,14 @@ using ExpenseTrackerApi.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using MySqlConnector;
 
-
 namespace ExpenseTrackerApi.Services;
-
 public class ExpenseService
 { 
     public static bool ExpenseIsReal(int id)
     {
         string query = "select count(*) from expenses where id = @id";
 
-        if (DataBase.Service.SqlScalarExp(query,id) == 1)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-    public static (bool success,string message) DeleteExpense(int id)
-    {
-        string query = "select count(id) as count from expenses where id = 3;delete from expenses where id = 2;";
-        if(DataBase.Service.SqlScalarExp(query,id) == 1)
-        {
-            return (true,"Expense Deleted");
-        }
-        return (false,"there is no expense with this id");
+        return DataBase.Service.SqlScalarExp(query,id) == 1;
     }
     public static List<ExpenseClass> GetEveryExpense(
         int? page,
@@ -71,7 +53,12 @@ public class ExpenseService
 
         return DataBase.Service.SqlReadExpFilter(query,offset,pageSize,id,name,value,category,date);
     }
-    public static (bool success,object expense) CreateExpense(ExpenseClass expense)
+    public static (bool success,ExpenseClass? expenseClass) GetExpense(int id)
+    {
+        string query = "SELECT * FROM expenses where id = @id;";
+        return (true,DataBase.Service.SqlReadExpense(query,id));
+    }
+    public static (bool success,ExpenseClass expense) CreateExpense(ExpenseClass expense)
     {
         if(Validate(expense) == true)
         {
@@ -82,18 +69,6 @@ public class ExpenseService
         else
         {
             return (false,null);
-        }
-    }
-    public static (bool success,ExpenseClass? expenseClass) GetExpense(int id)
-    {
-        if(ExpenseService.ExpenseIsReal(id) == false)
-        {
-            return (false,null);
-        }
-        else
-        {
-            string query = "SELECT * FROM expensetracker.expenses where id = @id;";
-            return (true,DataBase.Service.SqlReadExpense(query,id));
         }
     }
 
@@ -127,14 +102,26 @@ public class ExpenseService
             return true;
         }
     }
-    public static List<CategoryClass> SpendByCategory()
+    public static List<CategoryClass> GetByCategory()
     {
         string query = "Select category,Sum(Value) as Value FROM expenses group by category";
         return DataBase.Service.SqlReadCategory(query);
     }
-    public static CategoryClass SpendTotal()
+    public static CategoryClass GetTotal()
     {
         string query = "Select Sum(Value) as Value FROM expenses;";
         return DataBase.Service.SqlReadTotal(query);
+    }
+    public static (bool success,string message) DeleteExpense(int id)
+    {
+        if (ExpenseIsReal(id))
+        {
+            string query = "delete from expenses where id = @id;";
+            DataBase.Service.SqlNonQuery(query,id);
+            {
+                return (true,"Expense Deleted");
+            }
+        }
+        return (false,"there is no expense with this id");
     }
 }

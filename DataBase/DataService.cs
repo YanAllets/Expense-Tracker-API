@@ -37,11 +37,11 @@ public class Service
         Config.conn.Open();
         MySqlDataReader reader = comando.ExecuteReader();
 
-        List<ExpenseClass> list = new List<ExpenseClass>();
+        ExpenseClass? expense = null;
 
         while (reader.Read())
         {   
-            ExpenseClass expense = new ExpenseClass()
+            expense = new ExpenseClass()
             {
                 Id = Convert.ToInt32(reader["Id"]),
                 Name = Convert.ToString(reader["Name"]),
@@ -49,13 +49,9 @@ public class Service
                 Category = Convert.ToString(reader["Category"]),
                 Date = Convert.ToDateTime(reader["Date"])
             };
-            list.Add(expense);
         }
-
         Config.conn.Close();
-
-        System.Console.WriteLine(list.FirstOrDefault().Name);
-        return list.FirstOrDefault();
+        return expense;
     }
     public static List<ExpenseClass> SqlReadExpFilter(
         string query,
