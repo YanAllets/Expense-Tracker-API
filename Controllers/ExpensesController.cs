@@ -14,12 +14,11 @@ public class ExpenseController : ControllerBase
 
     public ExpenseController(ExpenseService service)
     {
-        teste = service;
     }
     
     [HttpGet]
     
-    public List<ExpenseClass> GetShowList(
+    public IActionResult GetShowList(
         int? page,
         int? pageSize,
         int? id,
@@ -29,7 +28,15 @@ public class ExpenseController : ControllerBase
         DateTime? date
     )
     {
-        return ExpenseService.GetEveryExpense(page,pageSize,id,name,value,category,date);
+        var result = ExpenseService.GetEveryExpense(page,pageSize,id,name,value,category,date);
+        if(result == (false,null))
+        {
+            return NotFound("Invalid page or Page Size...");
+        }
+        else
+        {
+            return Ok(result.list);
+        }
     }
 
     [HttpGet("{id}")]

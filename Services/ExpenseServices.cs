@@ -11,7 +11,7 @@ public class ExpenseService
 
         return DataBase.Service.SqlScalarExp(query,id) == 1;
     }
-    public static List<ExpenseClass> GetEveryExpense(
+    public static (bool success,List<ExpenseClass> list) GetEveryExpense(
         int? page,
         int? pageSize,
         int? id,
@@ -20,7 +20,12 @@ public class ExpenseService
         string? category,
         DateTime? date
     )
+    
     {
+        if(page < 1|| pageSize < 1||pageSize > 100)
+        {
+            return (false,null);
+        }
         string query = "SELECT * FROM expenses WHERE 1=1";
         int? offset = (page - 1) * pageSize;
 
@@ -44,6 +49,9 @@ public class ExpenseService
         {
             query += "\n AND Date = @date";
         }
+
+        query += "\n order by id";
+
         if (page != null && pageSize != null)
         {
             query += $"\n LIMIT @pageSize offset @offset";
@@ -51,14 +59,14 @@ public class ExpenseService
 
         query = query + ";";
 
-        return DataBase.Service.SqlReadExpFilter(query,offset,pageSize,id,name,value,category,date);
+        return (true,DataBase.Service.SqlReadExpFilter(query,offset,pageSize,id,name,value,category,date));
     }
     public static (bool success,ExpenseClass? expenseClass) GetExpense(int id)
     {
         string query = "SELECT * FROM expenses where id = @id;";
         return (true,DataBase.Service.SqlReadExpense(query,id));
     }
-    public static (bool success,ExpenseClass expense) CreateExpense(ExpenseClass expense)
+    public static (bool success,ExpenseClass? expense) CreateExpense(ExpenseClass expense)
     {
         if(Validate(expense) == true)
         {

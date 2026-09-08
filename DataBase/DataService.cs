@@ -14,7 +14,7 @@ public class Service
         comando.ExecuteNonQuery();
         Config.conn.Close();
     }
-    public static void SqlNonQueryExp(string query,ExpenseClass? expense)
+    public static void SqlNonQueryExp(string query,ExpenseClass expense)
     {
         MySqlCommand comando = new MySqlCommand(query,Config.conn);
 
@@ -71,8 +71,8 @@ public class Service
         comando.Parameters.Add("@value", MySqlDbType.Decimal).Value = value;
         comando.Parameters.Add("@date", MySqlDbType.DateTime).Value = date;
         comando.Parameters.Add("@category", MySqlDbType.VarChar).Value = category;
-        comando.Parameters.Add("@offset", MySqlDbType.VarChar).Value = offset;
-        comando.Parameters.Add("@pageSize", MySqlDbType.VarChar).Value = pageSize;
+        comando.Parameters.Add("@offset", MySqlDbType.Int32).Value = offset;
+        comando.Parameters.Add("@pageSize", MySqlDbType.Int32).Value = pageSize;
     
         Config.conn.Open();
         MySqlDataReader reader = comando.ExecuteReader();
