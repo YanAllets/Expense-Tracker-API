@@ -1,4 +1,3 @@
 bin/
 obj/
-
-DataBase\DBConfig.cs
+DataBase/DBConfig.cs
