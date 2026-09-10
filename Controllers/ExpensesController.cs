@@ -1,8 +1,6 @@
 using ExpenseTrackerApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using ExpenseTrackerApi.Services;
-using MySqlConnector;
-using ExpenseTrackerApi.DataBase;
 
 namespace ExpenseTrackerApi.Controllers;
 
@@ -10,12 +8,6 @@ namespace ExpenseTrackerApi.Controllers;
 [Route("api/[controller]")]
 public class ExpenseController : ControllerBase
 {
-    private readonly ExpenseService teste;
-
-    public ExpenseController(ExpenseService service)
-    {
-    }
-    
     [HttpGet]
     
     public IActionResult GetShowList(

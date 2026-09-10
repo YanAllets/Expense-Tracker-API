@@ -1,6 +1,4 @@
 using ExpenseTrackerApi.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
-using MySqlConnector;
 
 namespace ExpenseTrackerApi.Services;
 public class ExpenseService
@@ -10,6 +8,23 @@ public class ExpenseService
         string query = "select count(*) from expenses where id = @id";
 
         return DataBase.Service.SqlScalarExp(query,id) == 1;
+    }
+
+    //checks if expense is valid by rejecting null,empty or invalid values 
+    public static bool Validate(ExpenseClass expense)
+    {
+        if(
+            string.IsNullOrWhiteSpace(expense.Name) ||
+            string.IsNullOrWhiteSpace(expense.Category) ||
+            expense.Value <= 0
+        )
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
     public static (bool success,List<ExpenseClass> list) GetEveryExpense(
         int? page,
@@ -64,7 +79,15 @@ public class ExpenseService
     public static (bool success,ExpenseClass? expenseClass) GetExpense(int id)
     {
         string query = "SELECT * FROM expenses where id = @id;";
-        return (true,DataBase.Service.SqlReadExpense(query,id));
+        var result = DataBase.Service.SqlReadExpense(query,id);
+        if(result == null)
+        {
+            return (false,null);
+        }
+        else
+        {
+            return (true,result);
+        }
     }
     public static (bool success,ExpenseClass? expense) CreateExpense(ExpenseClass expense)
     {
@@ -82,7 +105,7 @@ public class ExpenseService
 
     public static bool ChangeExpense(int id,ExpenseClass expense)
     {
-        if (ExpenseIsReal(id) == true && expense.Value > 0)
+        if (ExpenseIsReal(id) == true && Validate(expense))
         {
             expense.Id = id;
             string query = "UPDATE expenses SET Name = @name,Value = @value,Date = @date,Category = @category WHERE id = @id";
@@ -92,22 +115,6 @@ public class ExpenseService
         else
         {
             return false;
-        }
-    }
-    //checks if expense is valid by rejecting null,empty or invalid values 
-    public static bool Validate(ExpenseClass expense)
-    {
-        if(
-            string.IsNullOrWhiteSpace(expense.Name) ||
-            string.IsNullOrWhiteSpace(expense.Category) ||
-            expense.Value <= 0
-        )
-        {
-            return false;
-        }
-        else
-        {
-            return true;
         }
     }
     public static List<CategoryClass> GetByCategory()

@@ -1,4 +1,3 @@
-using System.Reflection.Metadata;
 using ExpenseTrackerApi.Models;
 using MySqlConnector;
 
@@ -28,7 +27,7 @@ public class Service
         comando.ExecuteNonQuery();
         Config.conn.Close();
     }
-    public static ExpenseClass SqlReadExpense(string query,int? id)
+    public static ExpenseClass? SqlReadExpense(string query,int? id)
     {
         MySqlCommand comando = new MySqlCommand(query,Config.conn);
 
