@@ -4,6 +4,8 @@ using MySqlConnector;
 namespace ExpenseTrackerApi.DataBase;
 public class Service
 {
+    //Execute an SQL command that does not return a result
+    // used in functions like DELETE
     public static void SqlNonQuery(string query,int id)
     {
         MySqlCommand comando = new MySqlCommand(query,Config.conn);
@@ -13,6 +15,7 @@ public class Service
         comando.ExecuteNonQuery();
         Config.conn.Close();
     }
+    // Executes an INSERT or UPDATE command using the values from a ExpenseClass Object
     public static void SqlNonQueryExp(string query,ExpenseClass expense)
     {
         MySqlCommand comando = new MySqlCommand(query,Config.conn);
@@ -27,6 +30,8 @@ public class Service
         comando.ExecuteNonQuery();
         Config.conn.Close();
     }
+    //Execute a SELECT query and maps the first returned row to an expenseClass obj
+    //returns null when no matching expense is found
     public static ExpenseClass? SqlReadExpense(string query,int? id)
     {
         MySqlCommand comando = new MySqlCommand(query,Config.conn);
@@ -52,6 +57,7 @@ public class Service
         Config.conn.Close();
         return expense;
     }
+    //executes a filtered select query and maps the returned rows to ExpenseClass Objects
     public static List<ExpenseClass> SqlReadExpFilter(
         string query,
         int? offset,
@@ -94,6 +100,7 @@ public class Service
         Config.conn.Close();
         return list;
     }
+    // Reads the total amount spent for each category from the database
      public static List<CategoryClass> SqlReadCategory(string query)
     {
         MySqlCommand comando = new MySqlCommand(query,Config.conn);
@@ -115,6 +122,7 @@ public class Service
         Config.conn.Close();
         return list;
     }
+    // reads the total amount spent from the database
     public static CategoryClass SqlReadTotal(string query)
     {
         MySqlCommand comando = new MySqlCommand(query,Config.conn);
@@ -135,6 +143,7 @@ public class Service
         Config.conn.Close();
         return list.FirstOrDefault();
     }
+    // Executes a SQL query that RETURNS a single value
     public static int SqlScalar(string query)
     {
         MySqlCommand comando = new MySqlCommand(query,Config.conn);
@@ -144,6 +153,7 @@ public class Service
         Config.conn.Close();
         return i;
     }
+    //Executes a parametized SQL query and returns its first scalar result
     public static int SqlScalarExp(string query,int id)
     {
         MySqlCommand comando = new MySqlCommand(query,Config.conn);

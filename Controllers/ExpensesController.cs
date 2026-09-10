@@ -9,7 +9,8 @@ namespace ExpenseTrackerApi.Controllers;
 public class ExpenseController : ControllerBase
 {
     [HttpGet]
-    
+    // returns all expenses with optional filtering and pagination
+
     public IActionResult GetShowList(
         int? page,
         int? pageSize,
@@ -32,6 +33,7 @@ public class ExpenseController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    // Returns a single expense by ID
 
     public IActionResult GetExpense(int id)
     {
@@ -47,12 +49,15 @@ public class ExpenseController : ControllerBase
     }
 
     [HttpGet("category")]
+    // Returns the total amount spent for each category
+
     public List<CategoryClass> GetByCategory()
     {
         return ExpenseService.GetByCategory();
     }
 
     [HttpGet("total")]
+    // Returns the total amount spent across all expenses
     public CategoryClass GetTotal()
     {
         return ExpenseService.GetTotal();
@@ -60,6 +65,7 @@ public class ExpenseController : ControllerBase
 
 
     [HttpPost]
+    // Creates a new Expense
     public IActionResult CreateExpense(ExpenseClass expense)
     {
         var result = ExpenseService.CreateExpense(expense);
@@ -73,6 +79,7 @@ public class ExpenseController : ControllerBase
         }
     }
     [HttpPut("{id}")]
+    //Updates an existing expense
     public IActionResult ChangeExpense(int id,ExpenseClass ChangedExp)
     {
         if (ExpenseService.ChangeExpense(id, ChangedExp))
@@ -85,6 +92,7 @@ public class ExpenseController : ControllerBase
         }
     }
     [HttpDelete]
+    //Deletes an expense by provided ID
 
     public IActionResult DeleteExpense(int id)
     {

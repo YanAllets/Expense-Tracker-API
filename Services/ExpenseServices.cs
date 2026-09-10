@@ -3,6 +3,7 @@ using ExpenseTrackerApi.Models;
 namespace ExpenseTrackerApi.Services;
 public class ExpenseService
 { 
+    //checks wheter an expense with the specified ID exits in the database.
     public static bool ExpenseIsReal(int id)
     {
         string query = "select count(*) from expenses where id = @id";
@@ -11,6 +12,7 @@ public class ExpenseService
     }
 
     //checks if expense is valid by rejecting null,empty or invalid values 
+    // validates an expense before it is created or updated
     public static bool Validate(ExpenseClass expense)
     {
         if(
@@ -26,6 +28,7 @@ public class ExpenseService
             return true;
         }
     }
+    // retrieves expenses from the databse using optional filter and pagination
     public static (bool success,List<ExpenseClass> list) GetEveryExpense(
         int? page,
         int? pageSize,
@@ -76,6 +79,8 @@ public class ExpenseService
 
         return (true,DataBase.Service.SqlReadExpFilter(query,offset,pageSize,id,name,value,category,date));
     }
+    // Retrieves a single expense by its ID.
+    // Returns null when no expense is found in the database.
     public static (bool success,ExpenseClass? expenseClass) GetExpense(int id)
     {
         string query = "SELECT * FROM expenses where id = @id;";
@@ -89,6 +94,7 @@ public class ExpenseService
             return (true,result);
         }
     }
+    //create a new expense in the database (after validating)
     public static (bool success,ExpenseClass? expense) CreateExpense(ExpenseClass expense)
     {
         if(Validate(expense) == true)
@@ -102,7 +108,7 @@ public class ExpenseService
             return (false,null);
         }
     }
-
+// updates an already existing expense using the ID provided.
     public static bool ChangeExpense(int id,ExpenseClass expense)
     {
         if (ExpenseIsReal(id) == true && Validate(expense))
@@ -117,16 +123,19 @@ public class ExpenseService
             return false;
         }
     }
+    // calculates the amount spent ofr each category
     public static List<CategoryClass> GetByCategory()
     {
         string query = "Select category,Sum(Value) as Value FROM expenses group by category";
         return DataBase.Service.SqlReadCategory(query);
     }
+    //calculate the total amount spent across all expenses
     public static CategoryClass GetTotal()
     {
         string query = "Select Sum(Value) as Value FROM expenses;";
         return DataBase.Service.SqlReadTotal(query);
     }
+    //deletes an expense with the specified id (if it exists)
     public static (bool success,string message) DeleteExpense(int id)
     {
         if (ExpenseIsReal(id))
